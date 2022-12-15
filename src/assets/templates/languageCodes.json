@@ -708,6 +708,15 @@
       "Brezhoneg"
     ]
   },
+  "btk":  {
+    "english": [
+      "batak",
+      " langues"
+    ],
+    "native": [
+      "Batak languages"
+    ]
+  },
   "br":  {
     "english": [
       "Breton"
@@ -838,6 +847,14 @@
     ],
     "native": [
       "Caucasian Languages"
+    ]
+  },
+  "csh":  {
+    "english": [
+      "Asho Chin Khyang Kongtu Laitu Khyeng Qin Sho Shoa"
+    ],
+    "native": [
+      "Chin Asho Cho"
     ]
   },
   "ceb":  {
@@ -3469,6 +3486,14 @@
     ],
     "native": [
       "монгол"
+    ]
+  },
+  "mos":  {
+    "english": [
+      "moré"
+    ],
+    "native": [
+      "Mossi"
     ]
   },
   "mn":  {
