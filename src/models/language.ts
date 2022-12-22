@@ -29,7 +29,7 @@ export class Language {
   ) {
     this.codes = codes.map((code) => code.toLowerCase());
     const specific = codes.find((code) => code.length === 2);
-        //const specific = codes.find((code) => !code.includes('-'));
+    //const specific = codes.find((code) => !code.includes('-'));
     const dashed = codes.find((code) => code.indexOf('-') !== -1);
     if (specific) {
       this.code = specific;
