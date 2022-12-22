@@ -94,7 +94,7 @@ export class DownloadButtonComponent {
     }
     return this.languageProvider.getLanguage()
       .pipe(
-        mergeMap((lang: Language) => this.statReporterProvider.report(this.slug, 'download', lang.twoLetterCode, this.mediaProvider, this.mediaType))
+        mergeMap((lang: Language) => this.statReporterProvider.report(this.slug, 'download', lang.code, this.mediaProvider, this.mediaType))
       );
   }
 

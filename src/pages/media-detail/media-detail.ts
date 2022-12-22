@@ -235,7 +235,7 @@ export class MediaDetailPage {
       return;
     }
     this.currentLanguage = language;
-    this.mediaDetailProvider.setLanguage(language.twoLetterCode);
+    this.mediaDetailProvider.setLanguage(language.code);
     this.mediaDetailProvider
       .get(this.slug)
       .pipe(take(1))
@@ -256,7 +256,7 @@ export class MediaDetailPage {
     if ((resource.mediaType === 'video') || (resource.mediaType === 'audio')) {
       this.navController.push('av-player', { items: items, slug: resource.slug });
     } else if (resource.mediaType === 'html') {
-      this.statReporterProvider.report(resource.slug, 'view', this.currentLanguage.twoLetterCode, '', resource.mediaType).pipe(
+      this.statReporterProvider.report(resource.slug, 'view', this.currentLanguage.code, '', resource.mediaType).pipe(
         take(1)
       ).subscribe(() => window.open(resource.filePath));
     } else if (viewer !== '') {

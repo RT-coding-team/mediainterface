@@ -119,7 +119,7 @@ export class BaseViewerPage {
       return of(null);
     }
     return this.languageProvider.getLanguage().pipe(
-      mergeMap((lang: Language) =>  this.statReporterProvider.report(item.slug, interaction, lang.twoLetterCode, item.provider, item.type).pipe(map(() =>  item)))
+      mergeMap((lang: Language) =>  this.statReporterProvider.report(item.slug, interaction, lang.code, item.provider, item.type).pipe(map(() =>  item)))
     );
   }
 
