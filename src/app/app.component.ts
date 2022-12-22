@@ -46,7 +46,7 @@ export class MyApp implements OnInit, OnDestroy {
     this.translate.setDefaultLang('en');
     this.languageProvider.getLanguage().pipe(take(1)).subscribe((language: Language) => {
       this.currentLanguage = language;
-      this.translate.use(language.twoLetterCode);
+      this.translate.use(language.code);
       if (language.isRtl) {
         this.platform.setDir('rtl', true);
       } else {
@@ -56,7 +56,7 @@ export class MyApp implements OnInit, OnDestroy {
     this.languageOnChangeStream$ = this.languageProvider.onLanguageChange.subscribe((language: Language) => {
       if ((this.currentLanguage) && (language.text !== this.currentLanguage.text)) {
         this.currentLanguage = language;
-        this.translate.use(language.twoLetterCode);
+        this.translate.use(language.code);
         if (language.isRtl) {
           this.platform.setDir('rtl', true);
         } else {
