@@ -28,8 +28,8 @@ export class Language {
     public isRtl = false,
   ) {
     this.codes = codes.map((code) => code.toLowerCase());
-    const specific = codes.find((code) => code.length === 2);
-    //const specific = codes.find((code) => !code.includes('-'));
+    //const specific = codes.find((code) => code.length === 2);   // Commented out 20221221 in favor of code below that supports 3 letter codes
+    const specific = codes.find((code) => !code.includes('-'));
     const dashed = codes.find((code) => code.indexOf('-') !== -1);
     if (specific) {
       this.code = specific;
