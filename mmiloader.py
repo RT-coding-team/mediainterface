@@ -113,17 +113,18 @@ if (doesRootContainLanguage):
 ##########################################################################
 #  Main Loop
 ##########################################################################
-for path,dirs,files in os.walk(mediaDirectory):
+for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 	thisDirectory = os.path.basename(os.path.normpath(path))
+	relativePath = path.replace(mediaDirectory + '/', '').replace(language + '/','')
 	print ("====================================================")
-	print ("Evaluating Directory: " + thisDirectory)
-	print (path,dirs,files)
+	print ("Evaluating Directory of Language (" + language + "): " + thisDirectory + " -> " + relativePath)
 	shortPath = path.replace(mediaDirectory + '/d','')
 	# These next two lines ignore directories and files that start with .
 	files = [f for f in files if not f[0] == '_']
 	dirs[:] = [d for d in dirs if not d[0] == '_']
 	files = [f for f in files if not f[0] == '.']
 	dirs[:] = [d for d in dirs if not d[0] == '.']
+	dirs.sort()
 	files.sort()
 
 	directoryType = ''  	# Always start a directory with unknown
@@ -228,7 +229,7 @@ for path,dirs,files in os.walk(mediaDirectory):
 		# Get certain data about the file and path
 		fullFilename = path + "/" + filename							# Example /media/usb0/content/video.mp4
 		shortName = pathlib.Path(path + "/" + filename).stem			# Example  video      (ALSO, slug is a term used in the BoltCMS mediabuilder that I'm adapting here)
-		relativePath = path.replace(mediaDirectory +'/','')
+		relativePath = path.replace(mediaDirectory +'/','').replace(language + '/','')
 		slug = relativePath.replace('/','-') + '-' + os.path.basename(fullFilename).replace('.','-')			# Example  video.mp4
 		extension = pathlib.Path(path + "/" + filename).suffix			# Example  .mp4
 
@@ -332,10 +333,10 @@ for path,dirs,files in os.walk(mediaDirectory):
 		#  Compiling Collection or Single
 		##########################################################################
 		if (directoryType == 'collection'):
-			print ("	Adding Episode to collection.json")
+			print ("	Adding Episode to collection.json: " + relativePath)
 			if (len(collection["episodes"]) == 0):
-				collection['title'] = os.path.basename(os.path.normpath(path))
-				collection['slug'] = 'collection-' + collection['title']
+				collection['title'] = relativePath # used to be os.path.basename(os.path.normpath(path))
+				collection['slug'] = 'collection-' + os.path.basename(os.path.normpath(path))
 				collection['mediaType'] = content['mediaType']
 				collection['mimeType'] = content['mimeType']
 				if (content["image"] == types[extension]["image"]):
