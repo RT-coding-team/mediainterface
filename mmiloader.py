@@ -25,7 +25,9 @@ zipFileName = mediaDirectory + '/saved.zip';
 
 # Init
 mains = {}        # This object contains all the data to construct each main.json at the end.  We add as we go along
-
+results = {}
+results['totalInMediaDirectory'] = int(os.popen("find " + mediaDirectory + " -type f,l | wc -l").read().replace('\n',''))
+results['processed'] = 0
 
 # Clear the content directory so we replace it in whole and create the en directory for default
 # Copy templates to content folder
@@ -178,15 +180,46 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		continue;
 
 	##########################################################################
-	#  If this directory contains index.html then treat as web content
+	#  Skip Directories with Characters we don't want
+	##########################################################################
+	if ("'" in thisDirectory):
+		print ("	Directory contains invalid character: " + thisDirectory)
+		continue
+
+	##########################################################################
+	#  If this directory is called images, skip because it's probably for html and we don't want to index this
+	##########################################################################
+	if (thisDirectory == 'images'):
+		print ("	WebPath: Skipping images directory")
+		webpaths.append(path)
+		continue;
+
+	##########################################################################
+	#  If this directory contains html files then treat as web content and if it has no index file but is web, make an index file
 	##########################################################################
 
-	if (os.path.exists(path + "/index.html") or os.path.exists(path + "/index.htm")):
+	#if (os.path.exists(path + "/index.html") or os.path.exists(path + "/index.htm")):
+	if (int(os.popen("ls '" + path + "/'*.htm* 2>/dev/null | wc -l").read().replace('\n','')) > 0):
 		print ("	" + path + " is HTML web content")
+		if (os.path.exists(path + "/index.html")):
+			print ("	WebPath: index file found")
+		elif (os.path.exists(path + "/index.htm")):
+			print ("	WebPath index.htm found -- symlink index.html to index.html")
+			os.system ("ln -s '" + path + "/index.htm' '" + path + "/index.html'");
+			files = []
+			files.append("index.html")
+		else:
+			# This means we have no index but we will make one
+			os.system ("tree '" + path + "' -H '.' -L 1 --noreport --charset utf-8 -P '*.htm*' | sed -e '/<hr>/,+7d' >" + path + "/index.html")
+			print ("	WebPath: " + path + " is a web directory but doesn't have index file -- Creating an index of this folder")
+			fullFilename = path + "/index.html"   # Rewrite this for indexing
+			filename = "index.html"   # Rewrite this for indexing
+			files = []
+			files.append("index.html")
 		# See if the language already exists in the directory, if not make and populate a directory from the template
 		# Make a symlink to the file on USB to display the content
 		print ("	WebPath: Writing symlink to /html folder")
-		os.system ("ln -s '" + path + "' " + contentDirectory + "/" + language + "/html/")
+		os.system ("ln -s '" + path + "' " + contentDirectory + "/" + language + "/html/" + relativePath.replace('/','-'))
 		try:
 			if (brand['makeArchive'] == True):
 			  print ("	WebPath: Creating web archive zip file on USB")
@@ -222,7 +255,7 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		##########################################################################
 
 		# Skip all files in a web path not named index.html because we just build an item for the index
-		if (path in webpaths and filename != 'index.html'):
+		if (path in webpaths and "index.htm" not in filename):
 			print ("	Webpath file " + filename + " is not index so skip")
 			continue
 
@@ -272,13 +305,17 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		#			the mimeType is always zip for the zip file to download
 		#			the filename is always to the zip file
 
-		if (extension == '.html'):
+		#if (extension == '.html'):
+		if (filename == 'index.html'):
 			print ("	Handling index.html for webpath")
-			slug = os.path.basename(os.path.normpath(path))
+			slug = relativePath.replace('/','-')  # Used to be os.path.basename(os.path.normpath(path))
 			content["slug"] = slug
 			content["mimeType"] = "application/zip"
-			content["title"] = os.path.basename(os.path.normpath(path))
+			content["title"] = relativePath #used to be os.path.basename(os.path.normpath(path))
 			content["filename"] = slug + ".zip"
+		elif (extension == '.htm' or extension == '.html'):
+			print ("	Ignoring html file not called index.html")
+			continue;
 
 		##########################################################################
 		#  Mime type determination.  Try types.json, then mimetype library
@@ -363,6 +400,7 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		print ("	Symlink: " + contentDirectory + '/' + language + '/media/' + filename)
 
 		print ("	COMPLETE: Based on file type " + fullFilename + " added to enhanced interface for language " + language)
+		results['processed'] = results['processed'] + 1
 		# END FILE LOOP
 
 	# Wait to write collection to main.json until directory has been fully processed
@@ -419,4 +457,6 @@ with open(contentDirectory + "/languages.json", 'w', encoding='utf-8') as f:
 
 print ("Copying Metadata to Zip File On USB");
 os.system ("(cd " + contentDirectory + " && zip --symlinks -r " + zipFileName + " *)");
+print ("RESULTS:")
+print (results)
 print ("DONE");
