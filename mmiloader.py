@@ -129,6 +129,7 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 	dirs.sort()
 	files.sort()
 
+	
 	directoryType = ''  	# Always start a directory with unknown
 	skipWebPath = False;    # By default
 
@@ -197,7 +198,21 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 	##########################################################################
 	#  If this directory contains html files then treat as web content and if it has no index file but is web, make an index file
 	##########################################################################
+	if ("'" in thisDirectory):
+		print ("	Directory contains invalid character: " + thisDirectory)
+		continue
 
+	##########################################################################
+	#  If this directory is called images, skip because it's probably for html and we don't want to index this
+	##########################################################################
+	if (thisDirectory == 'images'):
+		print ("	WebPath: Skipping images directory")
+		webpaths.append(path)
+		continue;
+
+	##########################################################################
+	#  If this directory contains html files then treat as web content and if it has no index file but is web, make an index file
+	##########################################################################
 	#if (os.path.exists(path + "/index.html") or os.path.exists(path + "/index.htm")):
 	if (int(os.popen("ls '" + path + "/'*.htm* 2>/dev/null | wc -l").read().replace('\n','')) > 0):
 		print ("	" + path + " is HTML web content")
