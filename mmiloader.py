@@ -18,14 +18,16 @@ def intersection(lst1, lst2):
     return lst3
 
 # Defaults for Connectbox / TheWell
-mediaDirectory = "/media/usb0/content/"
+mediaDirectory = "/media/usb0/content"
 templatesDirectory = "/var/www/enhanced/content/www/assets/templates"
 contentDirectory = "/var/www/enhanced/content/www/assets/content"
-zipFileName = mediaDirectory + 'saved.zip';
+zipFileName = mediaDirectory + '/saved.zip';
 
 # Init
 mains = {}        # This object contains all the data to construct each main.json at the end.  We add as we go along
-
+results = {}
+results['totalInMediaDirectory'] = int(os.popen("find " + mediaDirectory + " -type f,l | wc -l").read().replace('\n',''))
+results['processed'] = 0
 
 # Clear the content directory so we replace it in whole and create the en directory for default
 # Copy templates to content folder
@@ -38,7 +40,7 @@ except:
 #  See if this directory is language folder or content
 ##########################################################################
 print ("	Check for saved.zip");
-if (os.path.exists(mediaDirectory + "saved.zip")):
+if (os.path.exists(mediaDirectory + "/saved.zip")):
 	print ("	Found saved.zip.  Unzipping and restoring to " + contentDirectory);
 	print (" ")
 	print ("****If you want to reload the USB, delete the file saved.zip from the USB drive.");
@@ -56,11 +58,11 @@ mains["en"] = json.load(f)
 os.system ("chmod -R 755 " + mediaDirectory)
 
 # Retrieve languageCodes.json
-f = open(templatesDirectory + '/languageCodes.json',encoding="utf8")
+f = open(templatesDirectory + '/languageCodes.json',)
 languageCodes = json.load(f)
 
 # Retrieve brand.txt
-f = open('/usr/local/connectbox/brand.txt',encoding="utf8")
+f = open('/usr/local/connectbox/brand.txt',)
 brand = json.load(f)
 
 # Sanity Checks
@@ -96,7 +98,7 @@ webpaths = []     # As we find web content, add here so we skip files and folder
 # Check for empty directory and write default content if empty
 if len(os.listdir(mediaDirectory) ) == 0:
 	print("Directory is empty")
-	f = open(mediaDirectory + "theopenwell.txt", "a")
+	f = open(mediaDirectory + "/theopenwell.txt", "a")
 	f.write("<h2>Media Directory Is Empty</h2>Please refer to documentation (placeholder).")
 	f.close()
 
@@ -113,18 +115,22 @@ if (doesRootContainLanguage):
 ##########################################################################
 #  Main Loop
 ##########################################################################
+#mediaDirectory = '/media/usb0/content/cmn/Audio_Bible_MP3/1-39Old Testament_CUV'
 for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
-	thisDirectory = os.path.basename(path)
+	thisDirectory = os.path.basename(os.path.normpath(path))
+	relativePath = path.replace(mediaDirectory + '/', '').replace(language + '/','')
 	print ("====================================================")
-	print ("Evaluating Directory: " + thisDirectory)
+	print ("Evaluating Directory of Language (" + language + "): " + thisDirectory + " -> " + relativePath)
 	shortPath = path.replace(mediaDirectory + '/d','')
 	# These next two lines ignore directories and files that start with .
 	files = [f for f in files if not f[0] == '_']
 	dirs[:] = [d for d in dirs if not d[0] == '_']
 	files = [f for f in files if not f[0] == '.']
 	dirs[:] = [d for d in dirs if not d[0] == '.']
+	dirs.sort()
 	files.sort()
 
+	
 	directoryType = ''  	# Always start a directory with unknown
 	skipWebPath = False;    # By default
 
@@ -133,17 +139,14 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 	##########################################################################
 
 	print ('	Checking For Language Folder: '+ thisDirectory)
-	proc = 1
 	try:
-		if (os.path.isdir(mediaDirectory + thisDirectory) and mediaDirectory + thisDirectory == path):
+		if (os.path.isdir(mediaDirectory + '/' + thisDirectory) and mediaDirectory + '/' + thisDirectory == path):
 			print ("	Directory is a valid language directory since it is in the root of the USB")
-			proc = 0
 		else:
 			fail() # This is a placeholder to trigger the try:except to have an exception that goes to except below
-		if proc> 0:
-			print ('	Found Language: ' + json.dumps(languageCodes[thisDirectory]))
-			language = thisDirectory
-			directoryType = "language"
+		print ('	Found Language: ' + json.dumps(languageCodes[thisDirectory]))
+		language = thisDirectory
+		directoryType = "language"
 	except:
 		print ('	NOT a Language: ' + thisDirectory)
 
@@ -179,21 +182,52 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		continue;
 
 	##########################################################################
-	#  If this directory contains index.html then treat as web content
+	#  Skip Directories with Characters we don't want
+	##########################################################################
+	if ("'" in thisDirectory):
+		print ("	Directory contains invalid character: " + thisDirectory)
+		continue
+
+	##########################################################################
+	#  If this directory is called images, skip because it's probably for html and we don't want to index this
+	##########################################################################
+	if (thisDirectory == 'images'):
+		print ("	WebPath: Skipping images directory")
+		webpaths.append(path)
+		continue;
+
+	##########################################################################
+	#  If this directory contains html files then treat as web content and if it has no index file but is web, make an index file
 	##########################################################################
 
-	if (os.path.exists(path + "/index.html") or os.path.exists(path + "/index.htm")):
+	#if (os.path.exists(path + "/index.html") or os.path.exists(path + "/index.htm")):
+	if (int(os.popen("ls '" + path + "/'*.htm* 2>/dev/null | wc -l").read().replace('\n','')) > 0):
 		print ("	" + path + " is HTML web content")
+		if (os.path.exists(path + "/index.html")):
+			print ("	WebPath: index file found")
+		elif (os.path.exists(path + "/index.htm")):
+			print ("	WebPath index.htm found -- symlink index.html to index.html")
+			os.system ("ln -s '" + path + "/index.htm' '" + path + "/index.html'");
+			files = []
+			files.append("index.html")
+		else:
+			# This means we have no index but we will make one
+			os.system ("tree '" + path + "' -H '.' -L 1 --noreport --charset utf-8 -P '*.htm*' | sed -e '/<hr>/,+7d' >" + path + "/index.html")
+			print ("	WebPath: " + path + " is a web directory but doesn't have index file -- Creating an index of this folder")
+			fullFilename = path + "/index.html"   # Rewrite this for indexing
+			filename = "index.html"   # Rewrite this for indexing
+			files = []
+			files.append("index.html")
 		# See if the language already exists in the directory, if not make and populate a directory from the template
 		# Make a symlink to the file on USB to display the content
 		print ("	WebPath: Writing symlink to /html folder")
-		os.system ("ln -s '" + path + "' " + contentDirectory + "/" + language + "/html/")
+		os.system ("ln -s '" + path + "' " + contentDirectory + "/" + language + "/html/" + relativePath.replace('/','-'))
 		try:
 			if (brand['makeArchive'] == True):
 			  print ("	WebPath: Creating web archive zip file on USB")
-			  shutil.make_archive(mediaDirectory + ".webarchive-" + thisDirectory, 'zip', path)
+			  shutil.make_archive(mediaDirectory + "/.webarchive-" + thisDirectory, 'zip', path)
 			  print ("	WebPath: Linking web archive zip")
-			  os.system ('ln -s "'+ mediaDirectory + '.webarchive-' + thisDirectory + '.zip" "' + contentDirectory + "/" + language + "/html/" + thisDirectory + '.zip"')
+			  os.system ('ln -s "'+ mediaDirectory + '/.webarchive-' + thisDirectory + '.zip" "' + contentDirectory + "/" + language + "/html/" + thisDirectory + '.zip"')
 		except:
 			print ("	NOT making web archive according to brand.txt, makeArchive is not true");
 		dirs = []
@@ -223,14 +257,14 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		##########################################################################
 
 		# Skip all files in a web path not named index.html because we just build an item for the index
-		if (path in webpaths and filename != 'index.html'):
+		if (path in webpaths and "index.htm" not in filename):
 			print ("	Webpath file " + filename + " is not index so skip")
 			continue
 
 		# Get certain data about the file and path
 		fullFilename = path + "/" + filename							# Example /media/usb0/content/video.mp4
 		shortName = pathlib.Path(path + "/" + filename).stem			# Example  video      (ALSO, slug is a term used in the BoltCMS mediabuilder that I'm adapting here)
-		relativePath = path.replace(mediaDirectory,'')
+		relativePath = path.replace(mediaDirectory +'/','').replace(language + '/','')
 		slug = relativePath.replace('/','-') + '-' + os.path.basename(fullFilename).replace('.','-')			# Example  video.mp4
 		extension = pathlib.Path(path + "/" + filename).suffix			# Example  .mp4
 
@@ -273,14 +307,18 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		#			the mimeType is always zip for the zip file to download
 		#			the filename is always to the zip file
 
-		if (extension == '.html'):
+		#if (extension == '.html'):
+		if (filename == 'index.html'):
 			print ("	Handling index.html for webpath")
-			slug = os.path.basename(os.path.normpath(path))
+			slug = relativePath.replace('/','-')  # Used to be os.path.basename(os.path.normpath(path))
 			content["slug"] = slug
 			content["mimeType"] = "application/zip"
-			content["title"] = os.path.basename(os.path.normpath(path))
+			content["title"] = relativePath #used to be os.path.basename(os.path.normpath(path))
 			content["filename"] = slug + ".zip"
-
+		elif (extension == '.htm' or extension == '.html'):
+			print ("	Ignoring html file not called index.html")
+			continue;
+		
 		##########################################################################
 		#  Mime type determination.  Try types.json, then mimetype library
 		##########################################################################
@@ -305,7 +343,7 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		# If this is a video, we can probably make a thumbnail
 		if (content["mediaType"] == 'video' and not content["image"]):
 			print ("	Attempting to make a thumbnail for the video")
-			os.system("ffmpeg -y -i '" + fullFilename + "' -an -ss 00:00:15 -vframes 1 '" + mediaDirectory + ".thumbnail-" + slug + ".png' >/dev/null 2>&1")
+			os.system("ffmpeg -y -i '" + fullFilename + "' -an -ss 00:00:15 -vframes 1 '" + mediaDirectory + "/.thumbnail-" + slug + ".png' >/dev/null 2>&1")
 			content["image"] = slug + ".png"
 			print ("	Thumbnail is created at: " + content["image"])
 
@@ -315,15 +353,15 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 			print ("	Since item is image, thumbnail is the same image")
 			content["image"] = filename
 			os.system ("ln -s '" + fullFilename + "' " + contentDirectory + "/" + language + "/images/")
-		elif (os.path.exists(mediaDirectory + ".thumbnail-" + slug + ".png")):
-			if (os.path.getsize(mediaDirectory + ".thumbnail-" + slug + ".png") > 0):
-				print ("	Linking Thumbnail: " + mediaDirectory + ".thumbnail-" + slug + ".png")
-				os.system ('ln -s "'+ mediaDirectory + '.thumbnail-' + slug + '.png" "' + contentDirectory + '/' + language + '/images/' + slug + '.png"')
+		elif (os.path.exists(mediaDirectory + "/.thumbnail-" + slug + ".png")):
+			if (os.path.getsize(mediaDirectory + "/.thumbnail-" + slug + ".png") > 0):
+				print ("	Linking Thumbnail: " + mediaDirectory + "/.thumbnail-" + slug + ".png")
+				os.system ('ln -s "'+ mediaDirectory + '/.thumbnail-' + slug + '.png" "' + contentDirectory + '/' + language + '/images/' + slug + '.png"')
 			else:
 				print ("	Thumbnail not found.  Placeholder Found at location")
 		else:
-			print ("	Writing Placeholder For Thumbnail to " + mediaDirectory + ".thumbnail-" + slug + ".png")
-			os.system ('touch "' + mediaDirectory + '.thumbnail-' + slug + '.png"')
+			print ("	Writing Placeholder For Thumbnail to " + mediaDirectory + "/.thumbnail-" + slug + ".png")
+			os.system ('touch "' + mediaDirectory + '/.thumbnail-' + slug + '.png"')
 
     # COMMENTED OUT 20220512 because now MMI uses icons instead of images.
 		#if (not content["image"]) :
@@ -334,10 +372,10 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		#  Compiling Collection or Single
 		##########################################################################
 		if (directoryType == 'collection'):
-			print ("	Adding Episode to collection.json")
+			print ("	Adding Episode to collection.json: " + relativePath)
 			if (len(collection["episodes"]) == 0):
-				collection['title'] = os.path.basename(os.path.normpath(path))
-				collection['slug'] = 'collection-' + collection['title']
+				collection['title'] = relativePath # used to be os.path.basename(os.path.normpath(path))
+				collection['slug'] = 'collection-' + os.path.basename(os.path.normpath(path))
 				collection['mediaType'] = content['mediaType']
 				collection['mimeType'] = content['mimeType']
 				if (content["image"] == types[extension]["image"]):
@@ -364,6 +402,7 @@ for path,dirs,files in os.walk(mediaDirectory, followlinks=True):
 		print ("	Symlink: " + contentDirectory + '/' + language + '/media/' + filename)
 
 		print ("	COMPLETE: Based on file type " + fullFilename + " added to enhanced interface for language " + language)
+		results['processed'] = results['processed'] + 1
 		# END FILE LOOP
 
 	# Wait to write collection to main.json until directory has been fully processed
@@ -420,4 +459,6 @@ with open(contentDirectory + "/languages.json", 'w', encoding='utf-8') as f:
 
 print ("Copying Metadata to Zip File On USB");
 os.system ("(cd " + contentDirectory + " && zip --symlinks -r " + zipFileName + " *)");
+print ("RESULTS:")
+print (results)
 print ("DONE");
