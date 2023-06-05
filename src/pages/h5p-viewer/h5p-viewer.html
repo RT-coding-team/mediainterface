@@ -7,9 +7,7 @@
     </ion-buttons>
     <ion-title>{{ item?.title }}</ion-title>
     <ion-buttons right>
-        <button ion-button icon-only (click)="downloadFile(item?.downloadPath)">
-            <ion-icon name="download"></ion-icon>
-        </button>
+        <download-button [filePath]="item?.downloadPath" [mediaProvider]="item?.provider" [mediaType]="item?.type" [slug]="item?.slug" [inNavBar]="true"></download-button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>

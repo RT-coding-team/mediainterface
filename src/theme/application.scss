@@ -66,3 +66,15 @@ h2 {
         top: calc(50% - 40px); /* 50% - 3/4 of icon height */
     }
 }
+ion-spinner * {
+  stroke: map-get($colors, primary) !important;
+  &.spinner-dots circle {
+      fill: map-get($colors, primary) !important;
+  }
+}
+ion-spinner.spinner-light * {
+  stroke: map-get($colors, light) !important;
+  &.spinner-dots circle {
+      fill: map-get($colors, light) !important;
+  }
+}

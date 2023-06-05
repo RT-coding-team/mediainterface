@@ -43,9 +43,7 @@
       <p>{{ media?.desc }}</p>
       <div id="single-media-actions" *ngIf="media?.episodes.length === 0">
         <ion-buttons end>
-          <button ion-button clear icon-only (click)="downloadFile(media?.downloadPath, media?.mediaProvider, media?.mediaType, media?.slug)">
-            <ion-icon name="download" color="primary"></ion-icon>
-          </button>
+          <download-button [filePath]="media?.downloadPath" [mediaProvider]="media?.mediaProvider" [mediaType]="media?.mediaType" [slug]="media?.slug"></download-button>
           <button ion-button clear icon-only (click)="playMedia()" [hidden]="!hasViewer(media?.mediaType)">
             <ion-icon [name]="playIcon(media?.mediaType)" color="primary"></ion-icon>
           </button>
@@ -57,7 +55,7 @@
         <ion-list-header>{{ 'EPISODES_TEXT' | translate }}</ion-list-header>
         <ion-item *ngFor="let episode of media?.episodes" text-wrap>
           <ion-thumbnail item-start>
-            <img src="{{ episode.imagePath }}" alt="{{ episode.title }}">
+            <img src="{{ episode.imagePath }}" alt="{{ episode.title }}" [hidden]="!episode.imagePath">
           </ion-thumbnail>
           <h2>{{ episode.title }}</h2>
           <p>{{ episode.desc }}</p>
@@ -70,9 +68,7 @@
               </ion-col>
               <ion-col col-6>
                 <ion-buttons end>
-                  <button ion-button clear icon-only (click)="downloadFile(episode?.downloadPath, episode?.mediaProvider, episode?.mediaType, episode?.slug)">
-                    <ion-icon name="download" color="primary"></ion-icon>
-                  </button>
+                  <download-button [filePath]="episode?.downloadPath" [mediaProvider]="episode?.mediaProvider" [mediaType]="episode?.mediaType" [slug]="episode?.slug"></download-button>
                   <button ion-button clear icon-only (click)="playEpisode(episode)" [hidden]="!hasViewer(episode?.mediaType, true)">
                     <ion-icon [name]="playIcon(episode?.mediaType)" color="primary"></ion-icon>
                   </button>
@@ -84,7 +80,5 @@
       </ion-list>
     </div>
   </div>
-  <!-- A special link for downloading files -->
-  <a #downloadLink class="hidden"></a>
   <app-footer></app-footer>
 </ion-content>

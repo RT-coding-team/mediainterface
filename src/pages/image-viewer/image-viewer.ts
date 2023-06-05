@@ -34,16 +34,6 @@ export class ImageViewerPage extends BaseViewerPage implements BaseViewerPageInt
   @ViewChild(Slides) slides: Slides;
 
   /**
-   * The user wants to download the file
-   * @param  filePath The file path
-   * @return  void
-   */
-  downloadFile(filePath: string) {
-    super.downloadFile(filePath);
-    this.reportView(this.item, 'download').pipe(take(1)).subscribe();
-  }
-
-  /**
    * Load the requested file
    *
    * @return void

@@ -4,7 +4,6 @@ import { take } from 'rxjs/operators/take';
 import { Book } from 'epubjs';
 import { BaseViewerPage } from '@pages/base-viewer/base-viewer';
 import { BaseViewerPageInterface } from '@interfaces/base-viewer.interface';
-import { DownloadFileProvider } from '@providers/download-file/download-file';
 import { LanguageProvider } from '@providers/language/language';
 import { NavParamsDataStoreProvider } from '@providers/nav-params-data-store/nav-params-data-store';
 import { StatReporterProvider } from '@providers/stat-reporter/stat-reporter';
@@ -82,7 +81,6 @@ export class EpubViewerPage extends BaseViewerPage implements BaseViewerPageInte
 
   constructor(
     protected dataStore: NavParamsDataStoreProvider,
-    protected downloadFileProvider: DownloadFileProvider,
     protected events: Events,
     protected navController: NavController,
     protected navParams: NavParams,
@@ -94,7 +92,6 @@ export class EpubViewerPage extends BaseViewerPage implements BaseViewerPageInte
   ) {
     super(
       dataStore,
-      downloadFileProvider,
       languageProvider,
       navController,
       navParams,
@@ -179,16 +176,6 @@ export class EpubViewerPage extends BaseViewerPage implements BaseViewerPageInte
    */
   flatten(arr: Array<any>) {
     return [].concat(...arr.map(v => [v, ...this.flatten(v.subitems)]));
-  }
-
-  /**
-   * The user wants to download the file
-   * @param  filePath The file path
-   * @return  void
-   */
-  downloadFile(filePath: string) {
-    super.downloadFile(filePath);
-    this.reportView(this.item, 'download').pipe(take(1)).subscribe();
   }
 
   /**

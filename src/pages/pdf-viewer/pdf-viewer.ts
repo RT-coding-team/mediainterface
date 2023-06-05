@@ -7,7 +7,6 @@ import { BaseViewerPage } from '@pages/base-viewer/base-viewer';
 import { BaseViewerPageInterface } from '@interfaces/base-viewer.interface';
 import { PagePosition } from '@interfaces/page-position.interface';
 import { PageState } from '@interfaces/page-state.interface';
-import { DownloadFileProvider } from '@providers/download-file/download-file';
 import { LanguageProvider } from '@providers/language/language';
 import { NavParamsDataStoreProvider } from '@providers/nav-params-data-store/nav-params-data-store';
 import { StatReporterProvider } from '@providers/stat-reporter/stat-reporter';
@@ -109,7 +108,6 @@ export class PdfViewerPage extends BaseViewerPage implements BaseViewerPageInter
 
   constructor(
     protected dataStore: NavParamsDataStoreProvider,
-    protected downloadFileProvider: DownloadFileProvider,
     protected navController: NavController,
     protected navParams: NavParams,
     protected viewController: ViewController,
@@ -119,7 +117,6 @@ export class PdfViewerPage extends BaseViewerPage implements BaseViewerPageInter
   ) {
     super(
       dataStore,
-      downloadFileProvider,
       languageProvider,
       navController,
       navParams,
@@ -135,16 +132,6 @@ export class PdfViewerPage extends BaseViewerPage implements BaseViewerPageInter
    */
   ionViewDidLoad() {
     super.ionViewDidLoad();
-  }
-
-  /**
-   * The user wants to download the file
-   * @param  filePath The file path
-   * @return  void
-   */
-  downloadFile(filePath: string) {
-    super.downloadFile(filePath);
-    this.reportView(this.item, 'download').pipe(take(1)).subscribe();
   }
 
   /**

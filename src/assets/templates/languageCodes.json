@@ -47,9 +47,21 @@
       "Acoli"
     ]
   },
+  "acn":  {
+    "english":  [
+      "Ngochang"
+    ],
+    "native":  [
+      "Ngochang",
+      "Achang",
+      "Acang",
+      "阿昌"
+    ]
+  },
   "ada": {
     "english": [
-      "Adangme"
+      "Adangme",
+      "Dangme"
     ],
     "native": [
       "Adangme"
@@ -716,6 +728,17 @@
       "Brezhoneg"
     ]
   },
+  "bru":  {
+    "english":  [
+      "Bru, Eastern"
+    ],
+    "native":  [
+      "Bru, Eastern",
+      "Brou",
+      "Bru Laos",
+      "Bru Tri"  
+    ]
+  },
   "btk": {
     "english": [
       "Batak Languages"
@@ -790,6 +813,17 @@
       "Blin"
     ]
   },
+  "bzi": {
+    "english": [
+      "Bisu"
+    ],
+    "native":  [
+      "Bisu",
+      "Lawa",
+      "Mibisu",
+      "畢蘇語"
+    ]
+  },
   "cad": {
     "english": [
       "Caddo"
@@ -846,6 +880,17 @@
     ],
     "native": [
       "Cebuano"
+    ]
+  },
+  "cek":  {
+    "english":  [
+      "Chin, Eastern Khumi"
+    ],
+    "native":  [
+      "Chin, Eastern Khumi",
+      "Chin, Eastern Khumi Rengcaa",
+      "Chin, Khumi Qengcaa",
+      "चिन, खुमि: क्वेंगका"
     ]
   },
   "cel": {
@@ -1048,6 +1093,17 @@
       "Chamic Languages"
     ]
   },
+  "cmn":  {
+    "english":  [
+      "Mandarin"
+    ],
+    "native":  [
+      "Mandarin",
+      "Beifang Fangyan",
+      "Beijinghua",
+      "普通話(國語)"
+    ]
+  },
   "cop": {
     "english": [
       "Coptic"
@@ -1162,6 +1218,17 @@
       "Kashubian"
     ]
   },
+  "csh":  {
+    "english":  [
+      "Chin, Asho"
+    ],
+    "native":  [
+      "Chin, Asho",
+      "Asho",
+      "Khawaw",
+      "Shoa"
+    ]
+  },
   "cus": {
     "english": [
       "Cushitic Languages"
@@ -1195,6 +1262,17 @@
     "native": [
       "česky",
       "čeština"
+    ]
+  },
+  "ctd":  {
+    "english":  [
+      "Chin, Tedim"  
+    ],
+    "native":  [
+      "Chin Tedim",
+      "Lai",
+      "Tedim",
+      "चिन, तेदिम"
     ]
   },
   "dak": {
@@ -2066,6 +2144,18 @@
       "Otjiherero"
     ]
   },
+  "hmj":  {
+    "english":  [
+      "Ge"
+      ],
+    "native":  [
+      "Ge",
+      "Chang Gu",
+      "Gedoudiu",
+      "Keh Deo",
+      "亻革家語、重安江苗語"  
+    ]
+  },
   "hz": {
     "english": [
       "Herero"
@@ -2846,6 +2936,18 @@
       "Kurukh"
     ]
   },
+  "ksw":  {
+    "english": [
+      "Karen, S'gaw"
+    ],
+    "native":  [
+      "Karen, S'gaw",
+      "Bilichi",
+      "Burmese Karen",
+      "kayinpyu",
+      "S'gaw"
+    ]
+  },
   "kua": {
     "english": [
       "Kuanyama",
@@ -2864,6 +2966,17 @@
     "native": [
       "Kuanyama",
       "Kwanyama"
+    ]
+  },
+  "kjp":  {
+    "english":  [
+      "Karen, Pwo"
+    ],
+    "native":  [
+      "Karen, Pwo",
+      "Karen, Pwo Eastern",
+      "Phlong",
+      "กะเหรี่ยงโป ตะวันออก"
     ]
   },
   "kum": {
@@ -2898,6 +3011,29 @@
     ],
     "native": [
       "Kutenai"
+    ]
+  },
+  "kxm":  {
+    "english":  [
+      "Khmer"
+    ],
+    "native":  [
+     "Khmer",
+     "Khmer Lue",
+     "Khmer, Nothern",
+     "ខ្មែរលើ"
+    ]
+  },
+  "kyu":  {
+
+    "english":  [
+      "Kayah, Western"
+    ],
+    "Native":  [
+      "Karenni",
+      "Kayah Li",
+      "Karennnyi",
+      "กะยาตะวันตก"  
     ]
   },
   "lad": {
@@ -3022,6 +3158,29 @@
       "Lingála"
     ]
   },
+  "lhu":  {
+    "english":  [
+      "Lahu"
+    ],
+    "native":  [
+     "Lahu",
+     "Kaixien",
+     "Kucong",
+     "Kutsong",
+     "拉祜語" 
+    ]
+  },
+  "lis":  {
+    "english":  [
+      "Lisu"
+    ],
+    "native":  [
+     "Lisu",
+     "Chedi",
+     "Chung",
+     "Khae" 
+    ]
+  },
   "lit": {
     "english": [
       "Lithuanian"
@@ -3114,6 +3273,16 @@
       "Ganda"
     ]
   },
+  "lsi":  {
+    "english":  [
+      "Lachid"
+    ],
+    "native":  [
+      "Lachid",
+      "Lacid",
+      "Lashi"
+    ]
+  },
   "lui": {
     "english": [
       "Luiseno"
@@ -3144,6 +3313,18 @@
     ],
     "native": [
       "Lushai"
+    ]
+  },
+  "lwl":  {
+    "english":  [
+      "Lawa, Northern"
+    ],
+    "native":  [
+      "Lawa, Northern",
+      "Agutaman",
+      "Eastern Lawa",
+      "Lavua",
+      "ละว้าเหนือ"
     ]
   },
   "mac": {
@@ -3439,6 +3620,17 @@
       "Manipuri"
     ]
   },
+  "mnn":  {
+    "english":  [
+      "Mnong, Sothern"
+    ],
+    "native":  [
+     "Mnong, Sothern",
+     "Bu Noong",
+     "Mnong",
+     "Mnong Nong" 
+    ]
+  },
   "mno": {
     "english": [
       "Manobo Languages"
@@ -3469,6 +3661,18 @@
     ],
     "native": [
       "монгол"
+    ]
+  },
+  "mnw":  {
+    "english":  [
+      "Mon"
+    ],
+    "native":  [
+      "Mon",
+      "Aleng",
+      "Mou",
+      "Rman",
+      "မွန်"
     ]
   },
   "mos": {
@@ -3511,12 +3715,35 @@
       "Mirandese"
     ]
   },
+  "mwww":  {
+    "english":  [
+      "Hmong Daw"
+    ],
+    "native":  [
+      "Hmong Daw",
+      "Banded Arm Hmong",
+      "Forest Miao",
+      "Hmong",
+      "Hmongb Dleub"
+    ]
+  },
   "mwr": {
     "english": [
       "Marwari"
     ],
     "native": [
       "Marwari"
+    ]
+  },
+  "mya":  {
+    "english":  [
+      "Burmese"
+    ],
+    "native":  [
+      "Burmese",
+      "Bama",
+      "Bamachaka",
+      "زبان برمه‌ای"
     ]
   },
   "myn": {
@@ -3749,6 +3976,17 @@
     "native": [
       "Bokmål",
       "Norwegian"
+    ]
+  },
+  "nod":  {
+    "english":  [
+      "Nogai"
+    ],
+    "native":  [
+      "Nogai",
+      "Bahasa Nogai",
+      "Karanogai",
+      "زبان نوقایی"  
     ]
   },
   "nog": {
@@ -4227,6 +4465,17 @@
       "Runa Simi"
     ]
   },
+  "rai":  {
+    "english":  [
+      "Ramoaaina"
+    ],
+    "native":  [
+      "Ramoaaina",
+      "Duke of York",
+      "Malu",
+      "Ramuaina"  
+    ]
+  },
   "raj": {
     "english": [
       "Rajasthani"
@@ -4251,6 +4500,17 @@
     "native": [
       "Cook Islands Maori",
       "Rarotongan"
+    ]
+  },
+  "rki":  {
+    "english":  [
+      "Rakhine"
+    ],
+    "native":  [
+      "Rakhine",
+      "Rakhaing",
+      "Rakkhaine",
+      "ရခိုင်"
     ]
   },
   "roa": {
@@ -4767,6 +5027,17 @@
     "native": [
       "Sotho",
       "Southern"
+    ]
+  },
+  "sou":  {
+    "english":  [
+      "Southern Thai"
+    ],
+    "native":  [
+      "Southern Thai",
+      "Dambro",
+      "Pak Tai",
+      "ไทยใต้"
     ]
   },
   "spa": {
@@ -5437,6 +5708,17 @@
       "اردو"
     ]
   },
+  "urk":  {
+    "english":  [
+      "Urak Lawoi"
+    ],
+    "native":  [
+      "Urak Lawoi",
+      "Chawnam",
+      "Chaw Talay",
+      "烏拉克語"  
+    ]
+  },
   "uzb": {
     "english": [
       "Uzbek"
@@ -5796,6 +6078,17 @@
       "No Linguistic Content",
       "Not Applicable"
     ]
+  },
+  "zyp":  {
+   "english":  [
+     "Chin, Zyphe"
+   ],
+   "native":  [
+     "Chin, Zyphe",
+     "Chin, Vuangtu",
+     "Zophei",
+     "ज़एफे"
+   ]
   },
   "zza": {
     "english": [

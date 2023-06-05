@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { take } from 'rxjs/operators/take';
-import { DownloadFileProvider } from '@providers/download-file/download-file';
 import { FileUtilityProvider } from '@providers/file-utility/file-utility';
 import { LanguageProvider } from '@providers/language/language';
 import { NavParamsDataStoreProvider } from '@providers/nav-params-data-store/nav-params-data-store';
@@ -35,7 +34,6 @@ export class TextViewerPage extends BaseViewerPage implements BaseViewerPageInte
 
   constructor(
     protected dataStore: NavParamsDataStoreProvider,
-    protected downloadFileProvider: DownloadFileProvider,
     protected fileUtilityProvider: FileUtilityProvider,
     protected navController: NavController,
     protected navParams: NavParams,
@@ -45,23 +43,12 @@ export class TextViewerPage extends BaseViewerPage implements BaseViewerPageInte
   ) {
     super(
       dataStore,
-      downloadFileProvider,
       languageProvider,
       navController,
       navParams,
       statReporterProvider,
       viewController,
     );
-  }
-
-  /**
-   * The user wants to download the file
-   * @param  filePath The file path
-   * @return  void
-   */
-  downloadFile(filePath: string) {
-    super.downloadFile(filePath);
-    this.reportView(this.item, 'download').pipe(take(1)).subscribe();
   }
 
   /**

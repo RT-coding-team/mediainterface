@@ -5,7 +5,7 @@ export class Language {
   /**
    * A two letter code representing the language
    */
-  twoLetterCode = '';
+  code = '';
 
   /**
    * Is this language selected?
@@ -28,13 +28,15 @@ export class Language {
     public isRtl = false,
   ) {
     this.codes = codes.map((code) => code.toLowerCase());
-    const specific = codes.find((code) => code.length === 2);
+    //const specific = codes.find((code) => code.length === 2);   // Commented out 20221221 in favor of code below that supports 3 letter codes
+    const specific = codes.find((code) => !code.includes('-'));
     const dashed = codes.find((code) => code.indexOf('-') !== -1);
     if (specific) {
-      this.twoLetterCode = specific;
+      this.code = specific;
     } else if (dashed) {
-      this.twoLetterCode = dashed.split('-')[0];
+      this.code = dashed.split('-')[0];
     }
+    console.log(`Model indicates that language is ${this.code}`);
   }
 
 }

@@ -15,22 +15,31 @@ describe('Language', () => {
       expect(lang.codes).toEqual(['zh', 'zh-hant', 'zh-hk', 'zh-to', 'zh-mo']);
     });
 
-    it('should set the twoLetterCode to the two letter code', () => {
+    it('should set the code to the two letter code', () => {
       const lang = new Language(
         ['zh', 'zh-HANT', 'zh-HK', 'zh-TO', 'zh-MO'],
         '今日未得之民',
         false,
       );
-      expect(lang.twoLetterCode).toEqual('zh');
+      expect(lang.code).toEqual('zh');
     });
 
-    it('should set the twoLetterCode by splitting a code', () => {
+    it('should set the code by splitting a code', () => {
       const lang = new Language(
         ['zh-HANT', 'zh-HK', 'zh-TO', 'zh-MO'],
         '今日未得之民',
         false,
       );
-      expect(lang.twoLetterCode).toEqual('zh');
+      expect(lang.code).toEqual('zh');
+    });
+
+    it('should set the code to the three letter code', () => {
+      const lang = new Language(
+        ['zza'],
+        'Dimili',
+        false,
+      );
+      expect(lang.code).toEqual('zzb');
     });
 
   });

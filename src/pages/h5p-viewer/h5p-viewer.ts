@@ -30,22 +30,13 @@ export class H5pViewerPage extends BaseViewerPage implements BaseViewerPageInter
   item: ViewerItem = null;
 
   /**
-   * The user wants to download the file
-   * @param  filePath The file path
-   * @return  void
-   */
-  downloadFile(filePath: string) {
-    super.downloadFile(filePath);
-    this.reportView(this.item, 'download').pipe(take(1)).subscribe();
-  }
-
-  /**
    * Load the requested file
    *
    * @return void
    */
   loadFile() {
     this.item = this.firstItem;
+    console.log(this.item);
     this.reportView(this.item).pipe(take(1)).subscribe();
     const options = {
       h5pJsonPath: this.item.filePath,

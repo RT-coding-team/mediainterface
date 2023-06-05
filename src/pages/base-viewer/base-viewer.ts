@@ -1,11 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { map } from 'rxjs/operators/map';
 import { mergeMap } from 'rxjs/operators/mergeMap';
 import { take } from 'rxjs/operators/take';
-import { DownloadFileProvider } from '@providers/download-file/download-file';
 import { LanguageProvider } from '@providers/language/language';
 import { NavParamsDataStoreProvider } from '@providers/nav-params-data-store/nav-params-data-store';
 import { StatReporterProvider } from '@providers/stat-reporter/stat-reporter';
@@ -20,11 +19,6 @@ import { Language } from '@models/language';
   template: ''
 })
 export class BaseViewerPage {
-
-  /**
-   * A reference to the download link
-   */
-  @ViewChild('downloadLink') downloadLinkRef: ElementRef;
 
   /**
    * The first item to display.
@@ -48,7 +42,6 @@ export class BaseViewerPage {
 
   constructor(
     protected dataStore: NavParamsDataStoreProvider,
-    protected downloadFileProvider: DownloadFileProvider,
     protected languageProvider: LanguageProvider,
     protected navController: NavController,
     protected navParams: NavParams,
@@ -83,28 +76,6 @@ export class BaseViewerPage {
         this.loadFile();
       });
     }
-  }
-
-  /**
-   * Download the file.  To use this method, you need to add this to your template:
-   *
-   * ```
-   * <a #downloadLink class="hidden"></a>
-   * ```
-   *
-   * @return void
-   * @link https://www.illucit.com/en/angular/angular-5-httpclient-file-download-with-authentication/
-   */
-  downloadFile(filePath: string) {
-    const fileName = filePath.split('\\').pop().split('/').pop();
-    this.downloadFileProvider.download(filePath).pipe(take(1)).subscribe((blob: any) => {
-      const url = window.URL.createObjectURL(blob);
-      const link = this.downloadLinkRef.nativeElement;
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
   }
 
   /**
@@ -148,7 +119,7 @@ export class BaseViewerPage {
       return of(null);
     }
     return this.languageProvider.getLanguage().pipe(
-      mergeMap((lang: Language) =>  this.statReporterProvider.report(item.slug, interaction, lang.twoLetterCode, item.provider, item.type).pipe(map(() =>  item)))
+      mergeMap((lang: Language) =>  this.statReporterProvider.report(item.slug, interaction, lang.code, item.provider, item.type).pipe(map(() =>  item)))
     );
   }
 

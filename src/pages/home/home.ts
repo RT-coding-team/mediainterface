@@ -131,7 +131,7 @@ export class HomePage {
       return;
     }
     this.currentLanguage = language;
-    this.mediaProvider.setLanguage(language.twoLetterCode);
+    this.mediaProvider.setLanguage(language.code);
     this.mediaProvider.recommended().pipe(
       mergeMap((recommended: Array<Media>) => {
         this.recommended = recommended;
